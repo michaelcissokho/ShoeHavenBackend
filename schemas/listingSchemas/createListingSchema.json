@@ -1,0 +1,76 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "title": "The root schema",
+    "description": "The root schema comprises the entire JSON document.",
+    "default": {},
+    "examples": [
+        {
+            "title": "Nike",
+            "image": "https://images.app.goo.gl/wYKniy2Wc5Eop16z8",
+            "price": 100,
+            "details": "THis is a great shoe and I think you would like it"
+        }
+    ],
+    "required": [
+        "title",
+        "picture",
+        "price",
+        "details",
+        "sold"
+    ],
+    "properties": {
+        "title": {
+            "$id": "#/properties/title",
+            "type": "string",
+            "title": "The title schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "Nike"
+            ]
+        },
+        "picture": {
+            "$id": "#/properties/image",
+            "type": "string",
+            "title": "The image schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "https://images.app.goo.gl/wYKniy2Wc5Eop16z8"
+            ]
+        },
+        "price": {
+            "$id": "#/properties/price",
+            "type": "string",
+            "title": "The price schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": 0,
+            "examples": [
+                100
+            ]
+        },
+        "details": {
+            "$id": "#/properties/details",
+            "type": "string",
+            "title": "The details schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                "THis is a great shoe and I think you would like it"
+            ]
+        },
+        "sold": {
+            "$id": "#/properties/sold",
+            "type": "boolean",
+            "title": "The sold schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": "",
+            "examples": [
+                false
+            ]
+        }
+    },
+    "additionalProperties": false
+}

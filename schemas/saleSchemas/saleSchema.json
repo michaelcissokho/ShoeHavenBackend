@@ -1,0 +1,65 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "title": "The root schema",
+    "description": "The root schema comprises the entire JSON document.",
+    "default": {},
+    "examples": [
+        {
+            "listingId": 23,
+            "seller": "auntPol",
+            "buyer": "tommyShelby",
+            "returned": false
+        }
+    ],
+    "required": [
+        "listingId",
+        "seller",
+        "buyer",
+        "returned"
+    ],
+    "properties": {
+        "listingId": {
+            "$id": "#/properties/listingId",
+            "type": "integer",
+            "title": "The listingId schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": 0,
+            "examples": [
+                23
+            ]
+        },
+        "seller": {
+            "$id": "#/properties/sellerId",
+            "type": "string",
+            "title": "The sellerId schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": 0,
+            "examples": [
+                "auntPol"
+            ]
+        },
+        "buyer": {
+            "$id": "#/properties/buyerId",
+            "type": "string",
+            "title": "The buyerId schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": 0,
+            "examples": [
+                "tommyShelby"
+            ]
+        },
+        "returned": {
+            "$id": "#/properties/returned",
+            "type": "boolean",
+            "title": "The returned schema",
+            "description": "An explanation about the purpose of this instance.",
+            "default": false,
+            "examples": [
+                false
+            ]
+        }
+    },
+    "additionalProperties": false
+}
