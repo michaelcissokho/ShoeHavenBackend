@@ -22,6 +22,16 @@ class Listing{
         return result.rows[0]
     }
 
+    static async return(id){
+        const result = await db.query(`
+        UPDATE listings
+        SET sold = $1
+        WHERE id =$2
+        RETURNING *`, [false, id])
+
+        return result.rows[0]
+    }
+
     static async find(listingId){
         const result = await db.query(`
         SELECT * FROM listings

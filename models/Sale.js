@@ -73,6 +73,21 @@ class Sale{
         }
     }
 
+    static async allowedToReturn(saleId, requestor){
+        const result = await db.query(`
+        SELECT buyer
+        FROM sales
+        WHERE id=$1`,[saleId])
+
+        const buyer = result.rows[0]
+
+        if(buyer !== requestor){
+            throw new BadRequestError('You Are Not The Buyer Of This Item')
+        }else{
+            return
+        }
+    }
+
     static async return(saleId){
         const result = await db.query(`
         SELECT returned
@@ -80,13 +95,13 @@ class Sale{
         WHERE id=$1`, [saleId])
 
         if(result.rows[0] === true){
-            throw BadRequestError('Item Already Returned')
+            throw new BadRequestError('Item Already Returned')
         }else{
             const markReturned = await db.query(`
             UPDATE sales
             SET returned = $1
             WHERE id = $2
-            RETURNING id`, [true, saleId])
+            RETURNING id,listing`, [true, saleId])
 
             return markReturned
         }
