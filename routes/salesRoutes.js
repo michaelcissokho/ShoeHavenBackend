@@ -56,13 +56,13 @@ router.get('/:saleId', isLoggedIn, async function (req, res, next) {
 })
 
 //need to ensure this is the buyer
-router.post('/return/:saleId', isLoggedIn, async function (req, res, next) {
+router.post('/:saleId/return', isLoggedIn, async function (req, res, next) {
     try {
         await Sale.allowedToReturn(req.params.saleId, req.user.username)
         const response = await Sale.return(req.params.saleId)
         await Listing.return(response.listing)
 
-        return response
+        return res.json(response)
     } catch (err) {
         next(err)
     }

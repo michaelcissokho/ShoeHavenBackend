@@ -10,11 +10,11 @@ class Sale{
 
     static async create({listingId, seller, buyer, returned}){
         const alreadySold = await db.query(`
-        SELECT id
+        SELECT returned
         FROM sales
         WHERE listing = $1`, [listingId])
 
-        if(alreadySold.rows[0]) throw new BadRequestError(`Item Already Sold: ${listingId}`)
+        if(alreadySold.rows[0] === false) throw new BadRequestError(`Item Already Sold: ${listingId}`)
 
         const result = await db.query(`
         INSERT INTO sales
@@ -64,7 +64,7 @@ class Sale{
         FROM sales
         WHERE buyer = $1`, [username])
 
-        const purchases = result.rows[0]
+        const purchases = result.rows
 
         if(purchases){
             return purchases
@@ -79,7 +79,7 @@ class Sale{
         FROM sales
         WHERE id=$1`,[saleId])
 
-        const buyer = result.rows[0]
+        const buyer = result.rows[0]['buyer']
 
         if(buyer !== requestor){
             throw new BadRequestError('You Are Not The Buyer Of This Item')
@@ -103,7 +103,7 @@ class Sale{
             WHERE id = $2
             RETURNING id,listing`, [true, saleId])
 
-            return markReturned
+            return markReturned.rows[0]
         }
     }
 }

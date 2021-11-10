@@ -5,6 +5,7 @@ const express = require('express');
 const router = express.Router();
 
 const { User } = require('../models/User');
+const {Sale} = require('../models/Sale')
 
 const { BadRequestError } = require('../expressError')
 
@@ -83,6 +84,15 @@ router.delete('/:username', isAdminOrCorrectUser, async function (req, res, next
     try {
             await User.remove(req.params.username)
             return res.json(`${req.params.username} has been deleted`)
+    } catch (err) {
+        return next(err)
+    }
+})
+
+router.get('/:username/purchases', isAdminOrCorrectUser, async function (req,res,next){
+    try {
+        let purchases = await Sale.findAllPurchased(req.params.username)
+        return res.send(purchases)
     } catch (err) {
         return next(err)
     }

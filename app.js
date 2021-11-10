@@ -25,9 +25,6 @@ app.use('/sales', salesRoutes)
 app.use('/posts', postRoutes)
 app.use('/comments', commentRoutes)
 app.use(express.static('public'))
-app.get('*',function(req,res) {
-  res.sendFile('/public/index.html');
-});
 
 /** Generic error handler; anything unhandled goes here. */
 app.use(function (err, req, res, next) {

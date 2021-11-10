@@ -1,7 +1,7 @@
 //loads .env contents into process.env
 require("dotenv").config()
 
-const PORT = +process.env.PORT || 5000
+const PORT = 'shoehaven-database.postgres.database.azure.com' //+process.env.PORT || 5000
 
 function getDatabaseLink() {
     return (process.env.NODE_ENV === 'test') ? "test_shoe_haven" : process.env.DATABASE_URL || "shoe_haven"
