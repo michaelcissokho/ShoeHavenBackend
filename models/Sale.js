@@ -9,7 +9,9 @@ class Sale{
         return result.rows
     }
 
-    static async create({listingId, buyer, payment_intent, returned}){
+    static async create(listingId, buyer, payment_intent, returned){
+        console.log('CreatingSale',listingId,buyer,payment_intent,returned);
+        
         const alreadySold = await db.query(`
         SELECT id
         FROM sales
@@ -50,7 +52,7 @@ class Sale{
         FROM sales
         WHERE buyer = $1`, [username])
 
-        const purchases = result.rows[0]
+        const purchases = result.rows
 
         if(purchases){
             return purchases
@@ -59,7 +61,7 @@ class Sale{
         }
     }
 
-    static async return(saleId, price){
+    static async return(saleId){        
         const result = await db.query(`
         SELECT returned
         FROM sales
@@ -73,11 +75,11 @@ class Sale{
             SET returned = $1
             WHERE id = $2
             RETURNING *`, [true, saleId])
-
+            
             const stripeRefund = await stripe.refunds.create({
-                payment_intent: markReturned.payment_intent,
-                amount: price*100
-            })
+                payment_intent: markReturned.rows[0].stripe_payment_intent_id,
+                amount: 1000,
+              });
 
 
             return {internal:markReturned.rows[0], fromstripe:stripeRefund.id}

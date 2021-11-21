@@ -5,7 +5,7 @@ DROP DATABASE shoe_haven;
 CREATE DATABASE shoe_haven;
 \connect shoe_haven
 
-\i shoe_haven_schema.sql
+\i shoe_haven-schema.sql
 -- \i shoe_haven-seed.sql
 
 \echo 'Delete and recreate test_shoe_haven db?'

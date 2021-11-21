@@ -5,7 +5,7 @@ const express = require('express');
 const router = express.Router();
 
 const { User } = require('../models/User');
-
+const { Sale } = require('../models/Sale')
 const { BadRequestError } = require('../expressError')
 
 const signupSchema = require('../schemas/userSchemas/signupSchema.json')
@@ -13,7 +13,7 @@ const authenticateSchema = require('../schemas/userSchemas/authenticateSchema.js
 const updateUserSchema = require('../schemas/userSchemas/updateUserSchema.json');
 const { isLoggedIn, isAdminOrCorrectUser } = require('../middleware/auth');
 
-router.get('/',isLoggedIn, async function (req, res, next) {
+router.get('/', isLoggedIn, async function (req, res, next) {
     try {
         let response = await User.test();
         return res.json(response);
@@ -22,7 +22,7 @@ router.get('/',isLoggedIn, async function (req, res, next) {
     }
 })
 
-router.get('/:username',isAdminOrCorrectUser, async function (req, res, next) {
+router.get('/:username', isAdminOrCorrectUser, async function (req, res, next) {
     try {
         let response = await User.find(req.params.username);
         return res.json(response);
@@ -70,8 +70,8 @@ router.patch('/:username/update', isAdminOrCorrectUser, async function (req, res
             const errs = validator.errors.map(e => e.stack);
             throw new BadRequestError(errs)
         }
-    
-        const updated = await User.update(req.params.username,req.body)
+
+        const updated = await User.update(req.params.username, req.body)
 
         return res.json(updated)
     } catch (err) {
@@ -81,8 +81,17 @@ router.patch('/:username/update', isAdminOrCorrectUser, async function (req, res
 
 router.delete('/:username', isAdminOrCorrectUser, async function (req, res, next) {
     try {
-            await User.remove(req.params.username)
-            return res.json(`${req.params.username} has been deleted`)
+        await User.remove(req.params.username)
+        return res.json(`${req.params.username} has been deleted`)
+    } catch (err) {
+        return next(err)
+    }
+})
+
+router.get('/:username/purchases', isAdminOrCorrectUser, async function (req, res, next) {
+    try {
+        let purchases = await Sale.findAllPurchased(req.params.username)
+        return res.send(purchases)
     } catch (err) {
         return next(err)
     }

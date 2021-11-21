@@ -1,9 +1,11 @@
 const express = require('express')
 const router = express.Router()
 
-const { Sale } = require('../Old-Files/Sale')
-const { Listing } = require('../Old-Files/Listing')
+const { Sale } = require('../models/Sale')
+const { Listing } = require('../models/Listing')
 const { Refund } = require('../models/Refund')
+const { BadRequestError } = require('../expressError')
+
 const { isLoggedIn, isAdmin } = require('../middleware/auth')
 
 const stripeSecretTestKey = process.env.STRIPE_SECRET_TEST_KEY
@@ -23,23 +25,27 @@ router.get('/', isLoggedIn, async function (req, res, next) {
 
 router.post('/checkout', isLoggedIn, async function (req, res, next) {
     try {
-        const fullcart = req.body.items
-
-        req.body.items.forEach((item) => {
+        let iDs = []
+        
+        for(let item of req.body.cart){
+            iDs.push(item.id)
+        }        
+        req.body.cart.forEach((item) => {
             delete item.id;
         })
 
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
-            line_items: req.body.items,
+            line_items: req.body.cart,
             mode: 'payment',
-            success_url: `/orderPlaced`,
-            cancel_url: '/orderCancel'
+            success_url: `http://localhost:3000/orderPlaced/{CHECKOUT_SESSION_ID}`,
+            cancel_url: 'http://localhost:3000/orderCancel',
+            metadata:{
+                iDs:JSON.stringify(iDs)
+            }
         })
 
-        res.redirect(303, session.url)
-
-        return res.json({ fullcart, payment_intent: session.payment_intent })
+        return res.json({ redirect:session.url })
     } catch (err) {
         next(err)
     }
@@ -47,17 +53,19 @@ router.post('/checkout', isLoggedIn, async function (req, res, next) {
 
 router.post('/new', isLoggedIn, async function (req, res, next) {
     try {
-        let salescreated = []
-
-        for (let item of req.body.successfulcart.items) {
+        const session = await stripe.checkout.sessions.retrieve(req.body.session_id)
+        const listings = JSON.parse(session.metadata.iDs)        
+        
+        let sales = []
+        for (let item of listings) {
             //check if listing exists
-            await Listing.find(item.id)
-            const response = await Sale.create(item.id, req.user.username, req.body.successfulcart.payment_intent, false)
-            salesCreated.push(response)
-            await Listing.markSold(item.id)
+            await Listing.find(item)
+            const response = await Sale.create(item, req.user.username, session.payment_intent, false)
+            sales.push(response)
+            await Listing.markSold(item)
         }
-
-        return res.json(salescreated)
+        
+        return res.json({sales})
     } catch (err) {
         next(err)
     }
@@ -76,9 +84,10 @@ router.get('/:saleId', isAdmin, async function (req, res, next) {
 //need to ensure this is the buyer
 router.post('/return/:saleId', isLoggedIn, async function (req, res, next) {
     try {
-        const ogListing = await Listing.return(req.params.saleId)
-        const response = await Sale.return(req.params.saleId, ogListing.price)
-        await Refund.create(response.internal.id, response.fromstripe)
+        const sale = await Sale.find(req.params.saleId)        
+        await Listing.return(sale.listing)
+        const response = await Sale.return(req.params.saleId)
+        await Refund.create(response.fromstripe, response.internal.id)
 
         return res.json(response)
     } catch (err) {
