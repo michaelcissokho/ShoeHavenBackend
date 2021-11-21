@@ -1,5 +1,5 @@
 const db = require('../db')
-const { UnauthorizedError, NotFoundError } = require('../expressError')
+const { NotFoundError } = require('../expressError')
 
 class Comment{
     static async test(){
@@ -22,52 +22,20 @@ class Comment{
         }
     }
 
-    static async allowedToChange(requestor, commentId){
-        const originalCommentor = await db.query(`
-        SELECT username
-        FROM comments
-        WHERE id = $1
-        `, [commentId])
-
-        if(requestor != originalCommentor.rows[0].username){
-            throw new UnauthorizedError('You are not the original commentor')
-        }else{
-            return
-        }
-    }
-
-    static async create(username, {postId, body}){
+    static async create(username, {body}){
         const timestamp = new Date(Date.now())
 
         const result = await db.query(`
         INSERT INTO comments
-        (username,
-        postId,
+        (commentor,
         body,
-        timeCommented)
-        VALUES ($1, $2, $3, $4)
-        RETURNING *`, [username, postId, body, timestamp])
+        timeSubmitted)
+        VALUES ($1, $2, $3)
+        RETURNING *`, [username, body, timestamp])
 
         const comment = result.rows[0]
 
         return comment
-    }
-
-    static async delete(commentId){
-        const result = await db.query(`
-        DELETE FROM comments
-        WHERE id = $1
-        RETURNING *`, [commentId])
-
-        return result.rows[0]
-    }
-
-    static async allFromPost(postId){
-        const result = await db.query(`
-        SELECT * FROM comments
-        WHERE postId = $1`, [postId])
-
-        return result.rows
     }
 }
 

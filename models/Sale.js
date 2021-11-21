@@ -1,5 +1,6 @@
 const db = require('../db')
 const { BadRequestError, NotFoundError } = require('../expressError')
+const stripe = require('stripe')(process.env.STRIPE_SECRET_TEST_KEY)
 
 class Sale{
     static async test(){
@@ -8,22 +9,22 @@ class Sale{
         return result.rows
     }
 
-    static async create({listingId, seller, buyer, returned}){
+    static async create({listingId, buyer, payment_intent, returned}){
         const alreadySold = await db.query(`
-        SELECT returned
+        SELECT id
         FROM sales
         WHERE listing = $1`, [listingId])
 
-        if(alreadySold.rows[0] === false) throw new BadRequestError(`Item Already Sold: ${listingId}`)
+        if(alreadySold.rows[0]) throw new BadRequestError(`Item Already Sold: ${listingId}`)
 
         const result = await db.query(`
         INSERT INTO sales
         (listing,
-        seller,
         buyer,
+        stripe_payment_intent_id,
         returned)
         VALUES ($1, $2, $3, $4)
-        RETURNING *`, [listingId, seller, buyer, returned])
+        RETURNING *`, [listingId, buyer, payment_intent, returned])
 
         const transaction = result.rows[0]
 
@@ -43,28 +44,13 @@ class Sale{
         throw new NotFoundError(`Transaction Not Found: ${transactionId}`)
     }
 
-    static async findAllSold(username){
-        const result = await db.query(`
-        SELECT *
-        FROM sales
-        WHERE seller = $1`, [username])
-
-        const sales = result.rows[0]
-
-        if(sales){
-            return sales
-        }else{
-            return "No Sales Yet!"
-        }
-    }
-
     static async findAllPurchased(username){
         const result = await db.query(`
         SELECT *
         FROM sales
         WHERE buyer = $1`, [username])
 
-        const purchases = result.rows
+        const purchases = result.rows[0]
 
         if(purchases){
             return purchases
@@ -73,37 +59,28 @@ class Sale{
         }
     }
 
-    static async allowedToReturn(saleId, requestor){
-        const result = await db.query(`
-        SELECT buyer
-        FROM sales
-        WHERE id=$1`,[saleId])
-
-        const buyer = result.rows[0]['buyer']
-
-        if(buyer !== requestor){
-            throw new BadRequestError('You Are Not The Buyer Of This Item')
-        }else{
-            return
-        }
-    }
-
-    static async return(saleId){
+    static async return(saleId, price){
         const result = await db.query(`
         SELECT returned
         FROM sales
         WHERE id=$1`, [saleId])
 
         if(result.rows[0] === true){
-            throw new BadRequestError('Item Already Returned')
+            throw BadRequestError('Item Already Returned')
         }else{
             const markReturned = await db.query(`
             UPDATE sales
             SET returned = $1
             WHERE id = $2
-            RETURNING id,listing`, [true, saleId])
+            RETURNING *`, [true, saleId])
 
-            return markReturned.rows[0]
+            const stripeRefund = await stripe.refunds.create({
+                payment_intent: markReturned.payment_intent,
+                amount: price*100
+            })
+
+
+            return {internal:markReturned.rows[0], fromstripe:stripeRefund.id}
         }
     }
 }

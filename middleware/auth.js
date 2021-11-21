@@ -5,7 +5,7 @@ const { BadRequestError } = require('../expressError');
 
 function authenticateJWT(req, res, next) {
     try {
-        const tokenFromHeader = req.headers && req.headers.authorization;
+        const tokenFromHeader = req.headers && req.headers.authorization;        
         if(tokenFromHeader){
             const token = tokenFromHeader.split(" ")[1]
             req.user = jwt.verify(token, SECRET_KEY)
@@ -32,5 +32,13 @@ function isAdminOrCorrectUser(req,res,next){
     }
 }
 
+function isAdmin(req,res,next){
+    if(req.user.isAdmin){
+        return next()
+    }else{
+        return next(new BadRequestError('You are not the admin'))
+    }
+}
 
-module.exports = { authenticateJWT, isLoggedIn, isAdminOrCorrectUser }
+
+module.exports = { authenticateJWT, isLoggedIn, isAdminOrCorrectUser, isAdmin }

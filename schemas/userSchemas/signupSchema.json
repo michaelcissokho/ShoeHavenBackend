@@ -11,7 +11,8 @@
             "password": "password1",
             "firstname": "FirstTest",
             "lastname": "LastTest",
-            "email": "test@test.com"
+            "email": "test@test.com",
+            "isAdmin":true
         }
     ],
     "required": [
@@ -19,8 +20,7 @@
         "password",
         "firstname",
         "lastname",
-        "email"
-    ],
+        "email"    ],
     "properties": {
         "username": {
             "$id": "#/properties/username",

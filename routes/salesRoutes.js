@@ -1,15 +1,13 @@
 const express = require('express')
 const router = express.Router()
 
-const jsonschema = require('jsonschema')
+const { Sale } = require('../Old-Files/Sale')
+const { Listing } = require('../Old-Files/Listing')
+const { Refund } = require('../models/Refund')
+const { isLoggedIn, isAdmin } = require('../middleware/auth')
 
-const { Sale } = require('../models/Sale')
-const { Listing } = require('../models/Listing'
-)
-const { isLoggedIn } = require('../middleware/auth')
-const saleSchema = require('../schemas/saleSchemas/saleSchema.json')
-const { BadRequestError } = require('../expressError')
-
+const stripeSecretTestKey = process.env.STRIPE_SECRET_TEST_KEY
+const stripe = require('stripe')(stripeSecretTestKey)
 
 router.get('/', isLoggedIn, async function (req, res, next) {
 
@@ -23,29 +21,49 @@ router.get('/', isLoggedIn, async function (req, res, next) {
     }
 })
 
-router.post('/new', isLoggedIn, async function (req, res, next) {
+router.post('/checkout', isLoggedIn, async function (req, res, next) {
     try {
-        const validator = jsonschema.validate(req.body,saleSchema)
-        if(!validator.valid){
-            const errs = validator.errors.map(e => e.stack)
-            throw new BadRequestError(errs)
-        }
-        
-        //check if listing exists
-        await Listing.find(req.body.Listing)
+        const fullcart = req.body.items
 
-        const response = await Sale.create(req.body)
+        req.body.items.forEach((item) => {
+            delete item.id;
+        })
 
-        await Listing.markSold(req.body.listingId)
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ['card'],
+            line_items: req.body.items,
+            mode: 'payment',
+            success_url: `/orderPlaced`,
+            cancel_url: '/orderCancel'
+        })
 
-        return res.json(response)
+        res.redirect(303, session.url)
+
+        return res.json({ fullcart, payment_intent: session.payment_intent })
     } catch (err) {
         next(err)
     }
 })
 
-//may need to ensure admin or seller/buyer to view this
-router.get('/:saleId', isLoggedIn, async function (req, res, next) {
+router.post('/new', isLoggedIn, async function (req, res, next) {
+    try {
+        let salescreated = []
+
+        for (let item of req.body.successfulcart.items) {
+            //check if listing exists
+            await Listing.find(item.id)
+            const response = await Sale.create(item.id, req.user.username, req.body.successfulcart.payment_intent, false)
+            salesCreated.push(response)
+            await Listing.markSold(item.id)
+        }
+
+        return res.json(salescreated)
+    } catch (err) {
+        next(err)
+    }
+})
+
+router.get('/:saleId', isAdmin, async function (req, res, next) {
     try {
         const response = await Sale.find(req.params.saleId)
 
@@ -56,11 +74,11 @@ router.get('/:saleId', isLoggedIn, async function (req, res, next) {
 })
 
 //need to ensure this is the buyer
-router.post('/:saleId/return', isLoggedIn, async function (req, res, next) {
+router.post('/return/:saleId', isLoggedIn, async function (req, res, next) {
     try {
-        await Sale.allowedToReturn(req.params.saleId, req.user.username)
-        const response = await Sale.return(req.params.saleId)
-        await Listing.return(response.listing)
+        const ogListing = await Listing.return(req.params.saleId)
+        const response = await Sale.return(req.params.saleId, ogListing.price)
+        await Refund.create(response.internal.id, response.fromstripe)
 
         return res.json(response)
     } catch (err) {

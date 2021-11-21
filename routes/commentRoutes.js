@@ -1,5 +1,4 @@
 const express = require('express')
-
 const router = express.Router()
 
 const jsonschema = require('jsonschema')
@@ -33,19 +32,5 @@ router.post('/new',isLoggedIn, async function(req, res, next){
         next(err)
     }
 })
-
-router.delete('/:commentId', async function(req, res, next){
-    try {
-        //checking if requestor is allowed to delete this comment
-        await Comment.allowedToChange(req.user.username, req.params.commentId)
-
-        const response = await Comment.delete(req.params.commentId)
-
-        return res.json(response)
-    } catch (err) {
-        next(err)
-    }
-})
-
 
 module.exports = router

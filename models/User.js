@@ -13,7 +13,7 @@ class User {
 
     static async find(username){
         const result = await db.query(`
-        SELECT username,firstname,lastname,email
+        SELECT username,firstname,lastname,email,isAdmin
         FROM users
         WHERE username = $1`, [username])
 
@@ -34,33 +34,25 @@ class User {
         if (duplicateCheck.rows[0]) throw new BadRequestError(`Duplicate Username: ${username}`)
 
         const hashed_pwd = await bcrypt.hash(password, BCRYPT_WORK_FACTOR)
+        
+        const isAdmin = (username == 'michael')? true : false
 
         const result = await db.query(`
             INSERT INTO users
-            (username,
-            password,
-            firstname,
-            lastname,
-            email
-            )
-            VALUES ($1, $2, $3, $4, $5)
-            RETURNING username, firstname, lastname, email`,[username, hashed_pwd, firstname, lastname, email]
+            VALUES ($1, $2, $3, $4, $5, $6)
+            RETURNING username, firstname, lastname, email,isAdmin`,[username, hashed_pwd, firstname, lastname, email, isAdmin]
         )
 
-        const user = result.rows[0]
+        const user = result.rows[0]        
 
-        const newUserToken = jwt.sign({username:user.username}, SECRET_KEY)
+        const newUserToken = jwt.sign({username:user.username, isAdmin:user.isadmin}, SECRET_KEY)
 
-        return {username: user.username, token: newUserToken}
+        return {username: user.username, token: newUserToken, isAdmin:user.isadmin}
     }
 
     static async authenticate({ username, password }) {
         const result = await db.query(`
-        SELECT username,
-               password,
-               firstname,
-               lastname,
-               email
+        SELECT *
         FROM users
         WHERE username = $1`, [username])
 
@@ -69,9 +61,8 @@ class User {
         if(user){
             const isvalid = await bcrypt.compare(password, user.password)
             if(isvalid){
-                delete user.password
-                const loggedInToken = jwt.sign({username:user.username}, SECRET_KEY)
-                return {username: user.username, token: loggedInToken}
+                const loggedInToken = jwt.sign({username:user.username, isAdmin: user.isadmin}, SECRET_KEY)
+                return {username: user.username, token: loggedInToken, isAdmin: user.isadmin}
             }
         }
 

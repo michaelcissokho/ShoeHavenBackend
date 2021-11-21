@@ -1,10 +1,10 @@
 const db = require('../db')
-const { UnauthorizedError, NotFoundError } = require('../expressError')
-const axios = require('axios')
+const { NotFoundError } = require('../expressError')
+const stripe = require('stripe')(process.env.STRIPE_SECRET_TEST_KEY)
 
-class Listing{
+class Listing {
 
-    static async allListings(){
+    static async allListings() {
         const result = await db.query(`
         SELECT * FROM listings
         WHERE sold = $1`, [false])
@@ -12,7 +12,7 @@ class Listing{
         return result.rows
     }
 
-    static async markSold(id){
+    static async markSold(id) {
         const result = await db.query(`
         UPDATE listings
         SET sold = $1
@@ -32,43 +32,39 @@ class Listing{
         return result.rows[0]
     }
 
-    static async find(listingId){
+    static async find(listingId) {
         const result = await db.query(`
         SELECT * FROM listings
         WHERE id = $1`, [listingId])
 
-        if(result.rows){
+        if (result.rows) {
             return result.rows[0]
-        }else{
+        } else {
             throw new NotFoundError('Listing Not Found')
         }
     }
 
-    static async allowedToChange(requestor, listingId){
-        const originalLister = await db.query(`
-        SELECT username
-        FROM listings
-        WHERE id = $1
-        `, [listingId])
+    static async create({ title, picture, price, details, sold }) {
+        const stripe_product = await stripe.products.create({
+            name: title
+        })
 
-        if(requestor != originalLister.rows[0].username){
-            throw new UnauthorizedError('You are not the original lister')
-        }else{
-            return
-        }
-    }
+        const stripe_price = await stripe.prices.create({
+            unit_amount: price * 100,
+            currency: 'usd',
+            product: stripe_product.id
+        })
 
-    static async create(username,{title, picture, price, details, sold}){
         const result = await db.query(`
         INSERT INTO listings
-        (username, title, picture, price, details, sold)
-        VALUES ($1, $2, $3, $4, $5, $6)
-        RETURNING *`, [username, title, picture, price, details, sold])
+        (title, picture, price, details, sold, stripe_product_id, stripe_price_id)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        RETURNING *`, [title, picture, price, details, sold, stripe_product.id, stripe_price.id])
 
         return result.rows[0]
     }
 
-    static async remove(id){
+    static async remove(id) {
         let listingId = parseInt(id)
         const result = await db.query(`
         DELETE FROM listings
@@ -76,8 +72,8 @@ class Listing{
         RETURNING id`, [listingId])
 
         return result.rows[0]
-        
+
     }
 }
 
-module.exports = {Listing}
+module.exports = { Listing }

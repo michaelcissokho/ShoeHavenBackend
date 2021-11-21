@@ -11,23 +11,12 @@
         }
     ],
     "required": [
-        "body",
-        "postId"
+        "body"
     ],
     "properties": {
         "body": {
             "$id": "#/properties/body",
             "type": "string",
-            "title": "The body schema",
-            "description": "An explanation about the purpose of this instance.",
-            "default": "",
-            "examples": [
-                "This is the body of the post"
-            ]
-        },
-        "postId": {
-            "$id": "#/properties/postId",
-            "type": "integer",
             "title": "The body schema",
             "description": "An explanation about the purpose of this instance.",
             "default": "",

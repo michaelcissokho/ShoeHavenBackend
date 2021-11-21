@@ -7,10 +7,10 @@ const cors = require('cors')
 const userRoutes = require('./routes/userRoutes')
 const listingRoutes = require('./routes/listingRoutes')
 const salesRoutes = require('./routes/salesRoutes')
-const postRoutes = require('./routes/postRoutes')
 const commentRoutes = require('./routes/commentRoutes')
 
 const { authenticateJWT } = require('./middleware/auth')
+
 const app = express()
 
 //cors used to enable cross origin requests which allows to build app with front end locally making calls to local backend
@@ -22,9 +22,9 @@ app.use(authenticateJWT)
 app.use('/users', userRoutes)
 app.use('/listings', listingRoutes)
 app.use('/sales', salesRoutes)
-app.use('/posts', postRoutes)
 app.use('/comments', commentRoutes)
 app.use(express.static('public'))
+
 
 /** Generic error handler; anything unhandled goes here. */
 app.use(function (err, req, res, next) {

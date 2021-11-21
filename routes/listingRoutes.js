@@ -8,7 +8,7 @@ const { Listing } = require('../models/Listing')
 
 const { BadRequestError } = require('../expressError')
 const createListingSchema = require('../schemas/listingSchemas/createListingSchema.json')
-const { isLoggedIn } = require('../middleware/auth')
+const { isLoggedIn, isAdmin } = require('../middleware/auth')
 
 
 router.get('/',isLoggedIn, async function (req, res, next) {
@@ -20,7 +20,8 @@ router.get('/',isLoggedIn, async function (req, res, next) {
     }
 })
 
-router.post('/new',isLoggedIn, async function (req, res, next) {
+//needs isAdmin middleware
+router.post('/new',isAdmin, async function (req, res, next) {
     try {
         const validator = jsonschema.validate(req.body, createListingSchema)
         if (!validator.valid) {
@@ -28,7 +29,7 @@ router.post('/new',isLoggedIn, async function (req, res, next) {
             throw new BadRequestError(errs)
         }
 
-        let response = await Listing.create(req.user.username,req.body)
+        let response = await Listing.create(req.body)
 
         return res.json(response)
 
@@ -47,12 +48,11 @@ router.get('/:listing',isLoggedIn, async function (req, res, next) {
     }
 })
 
-router.delete('/:listingId', async function (req, res, next) {
+//TODO:Needs an isAdmin middleware
+router.delete('/:listingId',isAdmin, async function (req, res, next) {
     try {
         //check if listing exists
         await Listing.find(req.params.listingId)
-        //check if requestor allowed to delete listing
-        await Listing.allowedToChange(req.user.username, req.params.listingId)
 
         let response = await Listing.remove(req.params.listingId)
 
