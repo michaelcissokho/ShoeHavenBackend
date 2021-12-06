@@ -37,7 +37,11 @@ app.use('/products', productRoutes)
 app.use('/carts', cartRoutes)
 app.use('/orders', orderRoutes)
 app.use('/feedback', feedbackRoutes)
-app.use(express.static('public'))
+app.use(express.static(path.join(__dirname, "/client")))
+
+app.get('*', (req,res) => {
+  res.sendFile(path.join(__dirname, '/client/build', 'index.html'))
+})
 
 
 /** Generic error handler; anything unhandled goes here. */
