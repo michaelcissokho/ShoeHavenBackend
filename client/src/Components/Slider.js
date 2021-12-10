@@ -84,6 +84,7 @@ const Slider = () => {
     useEffect(() => {
         async function getSliderItems() {
             let res = await api.request(`products`)
+            console.log(res)
             setSliderItems(res)
         }
         getSliderItems()
