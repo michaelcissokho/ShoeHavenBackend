@@ -37,10 +37,10 @@ app.use('/products', productRoutes)
 app.use('/carts', cartRoutes)
 app.use('/orders', orderRoutes)
 app.use('/feedback', feedbackRoutes)
-app.use(express.static(path.join(__dirname, "/public")))
+app.use(express.static(path.join(__dirname, "/client/build")))
 
 app.get('*', (req,res) => {
-  res.sendFile(path.join(__dirname, '/public', 'index.html'))
+  res.sendFile(path.join(__dirname, '/client/build', 'index.html'))
 })
 
 
