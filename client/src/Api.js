@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const BASE_URL = process.env.REACT_APP_BASE_URL || "https://viceroy-michaelcissokho.herokuapp.com"
+const BASE_URL = process.env.NODE_ENV === 'production' ? 'https://viceroy-michaelcissokho.herokuapp.com/' : 'http://localhost:5000';
 
 class Api {
 
