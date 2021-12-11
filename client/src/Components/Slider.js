@@ -85,7 +85,7 @@ const Slider = () => {
         async function getSliderItems() {
             let res = await api.request(`products`)
             console.log(res)
-            setSliderItems(res)
+            setSliderItems(res.data)
         }
         getSliderItems()
     }, [])
