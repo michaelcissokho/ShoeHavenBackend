@@ -1,13 +1,13 @@
 import axios from 'axios'
 
-const BASE_URL = process.env.NODE_ENV === 'production' ? 'https://viceroy-michaelcissokho.herokuapp.com/' : 'http://localhost:5000';
+const BASE_URL = process.env.NODE_ENV === 'production' ? 'https://viceroy-michaelcissokho.herokuapp.com' : 'http://localhost:5000';
 
 class Api {
 
     static token
 
     static async request(endpoint, data = {}, method = 'get') {
-        console.debug("API CALL:", endpoint, data, method);
+        console.log("API CALL:", endpoint, data, method);
 
         const url = `${BASE_URL}/${endpoint}`;
         const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
