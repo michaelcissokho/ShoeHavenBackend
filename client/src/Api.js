@@ -14,7 +14,7 @@ class Api {
         const params = (method === 'get') ? data : {};
 
         try {
-            return (await axios({ url, method, data, params, headers })).data
+            return (await axios({ url, method, data, params, headers }))
         } catch (err) {
             console.error("API error:", err.response);
             let message = err.response.data;
