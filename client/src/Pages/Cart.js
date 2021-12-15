@@ -7,8 +7,6 @@ import { Api as api } from '../Api'
 import { useHistory } from 'react-router-dom'
 import CartItem from '../Components/CartItem'
 
-const KEY = process.env.REACT_APP_STRIPE_PUBLIC
-
 const Container = styled.div``;
 
 const Wrapper = styled.div`
@@ -30,8 +28,6 @@ const Bottom = styled.div`
 const Info = styled.div`
     flex:3;
 `;
-
-
 
 const Hr = styled.hr`
     background-color: #eee;
@@ -76,6 +72,8 @@ const Cart = () => {
     const [cart, setCart] = useState([])
     const cartId = localStorage.getItem('cartId')    
     const [render, setRender] = useState(true)
+
+    const KEY = process.env.REACT_APP_STRIPE_PUBLIC
 
 
     useEffect(() => {

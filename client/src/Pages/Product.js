@@ -124,10 +124,16 @@ const Product = ({ submitFeedback }) => {
     //adding item to cart
     async function addToCart(id = localStorage.getItem('cartId')) {
         try {
+            if(!localStorage.getItem('token')){
+                alert('Please Sign In To Add Item To Cart')
+                return
+            }
+
             let oldCart = await api.request(`carts/${id}`)
             await api.request(`carts/${id}`, {
                 products: [...oldCart.products, { productId: product._id, size, color, price: product.price }]
             }, 'put')
+            
             alert('Added To Cart')
         } catch (err) {
             console.log('Error Adding to Cart:', err)
