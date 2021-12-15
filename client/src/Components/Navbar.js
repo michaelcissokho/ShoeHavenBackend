@@ -1,8 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Search, ShoppingCartOutlined } from '@material-ui/icons'
+import { ShoppingCartOutlined } from '@material-ui/icons'
 import { Link, useHistory } from 'react-router-dom'
 import { mobile } from '../responsive'
+import ReactCountryFlag from 'react-country-flag'
 
 const Container = styled.div`
     height:60px;
@@ -19,31 +20,30 @@ const Wrapper = styled.div`
 
 const Left = styled.div`
     flex:1;
-    display: flex;
-    align-items: center;
+    margin-bottom:15px;
 `;
 
-const Language = styled.div`
-    font-size:14px;
-    cursor: pointer;
-    ${mobile({ display: 'none' })}
+// const Language = styled.div`
+//     font-size:14px;
+//     cursor: pointer;
+//     ${mobile({ display: 'none' })}
 
-`;
+// `;
 
-const SearchContainer = styled.div`
-    border: 0.5px solid lightgray;
-    display: flex;
-    align-items: center;
-    margin-left: 25px;
-    padding: 5px;
-    ${mobile({ marginLeft: '10px' })}
-`;
+// const SearchContainer = styled.div`
+//     border: 0.5px solid lightgray;
+//     display: flex;
+//     align-items: center;
+//     margin-left: 25px;
+//     padding: 5px;
+//     ${mobile({ marginLeft: '10px' })}
+// `;
 
-const Input = styled.input`
-    border:none;
-    ${mobile({ width: '55px' })}
+// const Input = styled.input`
+//     border:none;
+//     ${mobile({ width: '55px' })}
 
-`;
+// `;
 const Center = styled.div`
     flex:1;
     text-align:center;
@@ -77,11 +77,15 @@ const Navbar = ({ logout }) => {
         <Container>
             <Wrapper>
                 <Left>
-                    <Language>EN</Language>
-                    <SearchContainer>
-                        <Input placeholder="Search" />
-                        <Search style={{ color: "gray", fontSize: 16 }} />
-                    </SearchContainer>
+                    <ReactCountryFlag
+                        countryCode="US"
+                        style={{
+                            fontSize: '2em',
+                            lineHeight: '2em',
+                        }}
+                        aria-label="United States"
+                        svg
+                    />
                 </Left>
                 <Center>
                     <Logo onClick={() => history.push('/')}>VICEROY.</Logo>
@@ -91,10 +95,10 @@ const Navbar = ({ logout }) => {
                     {!localStorage.getItem('id') && <MenuItem as={Link} to="/login">SIGN IN</MenuItem>}
                     <Link to='/cart'>
                         <MenuItem>
-                            <ShoppingCartOutlined onClick={() => history.push}/>
+                            <ShoppingCartOutlined onClick={() => history.push} />
                         </MenuItem>
                     </Link>
-                    {localStorage.getItem('id') && <MenuItem onClick={()=> history.push(`/users/${localStorage.getItem('id')}`)}>Your Account</MenuItem>}
+                    {localStorage.getItem('id') && <MenuItem onClick={() => history.push(`/users/${localStorage.getItem('id')}`)}>Your Account</MenuItem>}
                     {localStorage.getItem('id') && <MenuItem>{`current user: ${localStorage.getItem('username')}`}</MenuItem>}
                     {localStorage.getItem('id') && <MenuItem onClick={logout}>Logout</MenuItem>}
                 </Right>

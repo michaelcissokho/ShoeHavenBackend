@@ -40,7 +40,7 @@ const User = () => {
     useEffect(() => {
         async function getOrders() {
             let res = await api.request(`orders/users/${localStorage.getItem('id')}`)
-            setOrders(res.filter((order) => order.status !== 'returned'))
+            setOrders(res)
         }
         getOrders()
     }, [])

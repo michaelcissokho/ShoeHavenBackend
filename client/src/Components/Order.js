@@ -80,7 +80,11 @@ const Order = ({ orderId }) => {
                          ${order.amount}
                     </SummaryItemPrice>
                 </SummaryItem>
-                <SummaryButton onClick={() => returnOrder()}>RETURN ORDER</SummaryButton>
+                {order.status === 'returned'    
+                ? <SummaryButton >RETURNED</SummaryButton>
+                : <SummaryButton onClick={() => returnOrder()}>RETURN ORDER</SummaryButton>
+                }
+                
             </Summary>
         </Container>
     )
