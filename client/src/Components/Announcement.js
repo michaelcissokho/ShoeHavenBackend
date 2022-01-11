@@ -13,7 +13,7 @@ const Container = styled.div`
 const Announcement = () => {
     return (
         <Container>
-            Welcome to VICEROY! Free Shipping Until New Years Day!
+            Welcome to VICEROY! Free Shipping On All Orders!
         </Container>
     )
 }

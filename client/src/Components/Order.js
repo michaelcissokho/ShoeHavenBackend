@@ -34,6 +34,7 @@ const SummaryItemPrice = styled.span``;
 const SummaryButton = styled.button`
     width: 100%;
     padding: 10px;
+    opacity: ${props => props.type === "returned" && 0.33};
     background-color: black;
     color: white;
     font-weight: 600;
@@ -81,10 +82,9 @@ const Order = ({ orderId }) => {
                     </SummaryItemPrice>
                 </SummaryItem>
                 {order.status === 'returned'    
-                ? <SummaryButton >RETURNED</SummaryButton>
+                ? <SummaryButton type="returned">RETURNED</SummaryButton>
                 : <SummaryButton onClick={() => returnOrder()}>RETURN ORDER</SummaryButton>
-                }
-                
+                }            
             </Summary>
         </Container>
     )
