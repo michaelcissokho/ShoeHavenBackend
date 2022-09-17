@@ -7,8 +7,6 @@ class Api {
     static token
 
     static async request(endpoint, data = {}, method = 'get') {
-        console.log("API CALL:", endpoint, data, method);
-
         const url = `${BASE_URL}/${endpoint}`;
         const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
         const params = (method === 'get') ? data : {};
@@ -20,7 +18,6 @@ class Api {
             let message = err.response.data;
             throw Array.isArray(message) ? message : [message]
         }
-
     }
 
     //signup a new user with form data and save username and token in localStorage

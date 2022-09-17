@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory, Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { mobile } from '../responsive'
 
@@ -50,12 +50,12 @@ const Button = styled.button`
     margin-bottom: 10px;
 `
 
-const Link = styled.a`
-    margin: 5px 0px;
-    font-size: 12px;
-    text-decoration: underline;
-    cursor: pointer;
-`;
+const CreateAccountStyle = {
+    margin: '5px 0px',
+    fontSize: '12px',
+    textDecoration: 'underline',
+    cursor: 'pointer'
+};
 
 
 const Login = ({ login,createCart }) => {
@@ -86,8 +86,8 @@ const Login = ({ login,createCart }) => {
                     <Input placeholder="username" onChange={(e) => setUsername(e.target.value)} />
                     <Input type="password" placeholder="password" onChange={(e) => setPassword(e.target.value)} />
                     <Button>LOGIN</Button>
-                    <Link to="/register">CREATE A NEW ACCOUNT</Link>
                 </Form>
+                <Link to="/register" style={CreateAccountStyle}>CREATE A NEW ACCOUNT</Link>
             </Wrapper>
         </Container>
     )
