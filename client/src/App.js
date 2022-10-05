@@ -53,7 +53,7 @@ function App() {
       return new Promise((resolve, reject) => {
         resolve()
       })
-    } catch { }
+    } catch {}
   }
 
   return (

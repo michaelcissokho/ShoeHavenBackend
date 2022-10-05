@@ -55,8 +55,8 @@ const Order = ({ orderId }) => {
         try {
             let refund = await api.request(`checkout/refund`,{chargeId:order.chargeId}, 'post')
             let markReturned = await api.request(`orders/return/${order._id}`,{status:'returned'},'post')
-            console.log('Refund', refund)
-            console.log("Item Returned", markReturned)
+            // console.log('Refund', refund)
+            // console.log("Item Returned", markReturned)
             alert(`Order: ${markReturned._id} returned. You Have Been Refunded: $${refund.amount/100}`)
             return (refund,markReturned)
         } catch (err) {

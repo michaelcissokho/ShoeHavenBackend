@@ -4,7 +4,7 @@ import { Send } from '@material-ui/icons';
 import { mobile } from '../responsive'
 
 const Container = styled.div`
-    height: 60vh;
+    height: 40vh;
     background-color: #fcf5f5;
     display: flex;
     align-items: center;
@@ -12,7 +12,7 @@ const Container = styled.div`
     flex-direction: column;
 `;
 const Title = styled.h1`
-    font-size:70px;
+    font-size:40px;
     margin-bottom: 20px;
     ${mobile({ textAlign: 'center', fontSize: '35px' })}
 `;
@@ -26,7 +26,7 @@ const Desc = styled.div`
 
 const InputContainer = styled.form`
     width:50%;
-    height: 160px;
+    height: 100px;
     background-color: white;
     display: flex;
     justify-content: space-between;
@@ -35,11 +35,13 @@ const InputContainer = styled.form`
 `;
 const Input = styled.textarea`
     border:none;
-    flex:8;
-    padding-left: 20px;
+    flex:15;
+    padding-left: 30px;
+    padding-top: 20px;
 `;
 const Button = styled.button`
     flex:1;
+    /* width: 50%; */
     border:none;
     background-color: teal;
     color:white;
@@ -50,6 +52,10 @@ const Feedback = ({ submitFeedback }) => {
     const [submitted, setSubmitted] = useState(false)
 
     const handleSubmit = async (e) => {
+        if(!localStorage.getItem('token')){
+            alert('Please Sign In To Submit Feedback')
+            return
+        }
         e.preventDefault()
 
         submitFeedback(comment).then(() => {
@@ -63,11 +69,9 @@ const Feedback = ({ submitFeedback }) => {
                 <Title>Want To Help Improve Viceroy?</Title>
                 <Desc>Tell Us About Your Experience:</Desc>
                 <InputContainer onSubmit={handleSubmit}>
-                    <Input onChange={(e) => setComment(e.target.value)} />
-                    <Button type="submit">
-                        <Send />
-                    </Button>
-                </InputContainer>
+                    <Input onChange={(e) => setComment(e.target.value)}/>
+                    <Button type="submit"> <Send/> </Button>
+                </InputContainer>  
             </Container>
         )
     } else {

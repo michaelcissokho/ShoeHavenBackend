@@ -91,8 +91,10 @@ const Navbar = ({ logout }) => {
                     <Logo onClick={() => history.push('/')}>VICEROY.</Logo>
                 </Center>
                 <Right>
-                    {!localStorage.getItem('id') && <MenuItem as={Link} to="/register">REGISTER</MenuItem>}
-                    {!localStorage.getItem('id') && <MenuItem as={Link} to="/login">SIGN IN</MenuItem>}
+                    {!localStorage.getItem('id') && 
+                    <MenuItem as={Link} to="/register" style={{textDecoration:'none', color:'black'}}> REGISTER </MenuItem>}
+                    {!localStorage.getItem('id') && 
+                    <MenuItem as={Link} to="/login" style={{textDecoration:'none', color:'black'}}> SIGN IN </MenuItem>}
                     <Link to='/cart'>
                         <MenuItem>
                             <ShoppingCartOutlined onClick={() => history.push} />

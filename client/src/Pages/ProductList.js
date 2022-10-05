@@ -70,7 +70,7 @@ const ProductList = ({submitFeedback}) => {
                 <Filter>
                     <FilterText>Filter Products:</FilterText>
                     <Select name="colors" onChange={handleFilters}>
-                        <Option disabled defaultValue>
+                        <Option disabled selected>
                             Color
                         </Option>
                         <Option>white</Option>
@@ -81,7 +81,7 @@ const ProductList = ({submitFeedback}) => {
                         <Option>green</Option>
                     </Select>
                     <Select name="sizes" onChange={handleFilters}>
-                        <Option disabled defaultValue>
+                        <Option disabled selected>
                             Size
                         </Option>
                         <Option>7</Option>

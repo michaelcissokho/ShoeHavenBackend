@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { Facebook, Twitter, LinkedIn, GitHub, Room, Phone, MailOutline } from '@material-ui/icons';
 import {mobile} from '../responsive'
+import {Link} from 'react-router-dom';
 
 const Container = styled.div`
     display: flex;
@@ -77,8 +78,8 @@ const Footer = () => {
         <Container>
             <Left>
                 <Logo>VICEROY.</Logo>
-                <Desc
-                >Dolor nisi officia ipsum officia amet excepteur sunt laborum. Anim adipisicing minim reprehenderit amet velit aliquip enim sit. Nostrud amet sunt commodo do do ea proident sunt.
+                <Desc>
+                    A site for all shoes for sale by Michael Cissokho the site's creator. Hopefully you will find your perfect fit!
                 </Desc>
                 <SocialContainer>
                     <SocialIcon color="3B5999">
@@ -88,32 +89,45 @@ const Footer = () => {
                         <Twitter />
                     </SocialIcon>
                     <SocialIcon color="3B5999">
-                        <LinkedIn />
+                        <a href={"https://www.linkedin.com/in/michaelcissokho/"}>
+                            <LinkedIn style={{textDecoration:'none', color:'white'}}/> 
+                        </a>   
                     </SocialIcon>
-                    <SocialIcon color="E4405F">
-                        <GitHub />
+                    <SocialIcon color="E4405F">    
+                        <a href={"https://github.com/michaelcissokho"} > 
+                            <GitHub style={{textDecoration:'none', color:'white'}}/>
+                        </a>
                     </SocialIcon>
                 </SocialContainer>
             </Left>
             <Center>
                 <Title>Useful Links</Title>
                 <List>
-                    <ListItem>Home</ListItem>
-                    <ListItem>Cart</ListItem>
-                    <ListItem>Mens Fashion</ListItem>
-                    <ListItem>Womens Fashion</ListItem>
-                    <ListItem>Accessories</ListItem>
-                    <ListItem>My Account</ListItem>
-                    <ListItem>Order Tracking</ListItem>
-                    <ListItem>Wishlist</ListItem>
-                    <ListItem>Terms</ListItem>
+                    <ListItem>
+                        <Link to="/" style={{textDecoration:'none', color:'black'}}> Home </Link>
+                    </ListItem>
+                    <ListItem>
+                        <Link to="/cart" style={{textDecoration:'none', color:'black'}}> Cart</Link> 
+                    </ListItem>
+                    <ListItem> 
+                        <Link to="/products/men" style={{textDecoration:'none', color:'black'}}> Mens Fashion </Link>
+                    </ListItem>
+                    <ListItem> 
+                        <Link to="/products/women" style={{textDecoration:'none', color:'black'}}> Womens Fashion </Link>
+                    </ListItem>                  
+                    <ListItem> 
+                        <Link to="/products/casual" style={{textDecoration:'none', color:'black'}}> Casual </Link>
+                    </ListItem>
+                    <ListItem> 
+                        <Link to={`/users/${localStorage.getItem('id')}`} style={{textDecoration:'none', color:'black'}}> My Account </Link>
+                    </ListItem>
                 </List>
             </Center>
             <Right>
                 <Title>Contact</Title>
                 <ContactItem><Room style={{marginRight:"10px"}}/> 4146 Spring Haven Trail, South Orange NJ, 07079 </ContactItem>
-                <ContactItem><Phone style={{marginRight:"10px"}}/> +1 234 567 8901</ContactItem>
-                <ContactItem><MailOutline style={{marginRight:"10px"}}/> contact@viceroy.dev</ContactItem>
+                <ContactItem><Phone style={{marginRight:"10px"}}/> +1 732 421 5239</ContactItem>
+                <ContactItem><MailOutline style={{marginRight:"10px"}}/> michael.cissokho@gmail.com</ContactItem>
             </Right>
         </Container>
     )
