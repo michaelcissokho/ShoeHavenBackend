@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const { BCRYPT_WORK_FACTOR, SECRET_KEY } = require('../config')
 const User = require('../models/User');
+const {BadRequestError, NotFoundError} = require('../expressError')
 
 
 //register a user
