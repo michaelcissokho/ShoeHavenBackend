@@ -45,8 +45,6 @@ const User = () => {
         getOrders()
     }, [])
 
-    console.log(orders)
-
     return (
         <Container>
             <Wrapper>
@@ -54,7 +52,7 @@ const User = () => {
                 <Bottom>
                     <Info>
                         {orders?.map(order => (
-                            <Order key={order._id} orderId={order._id} />
+                            <Order key={order._id} order={order} />
                         ))}
                         <Hr />
                     </Info>

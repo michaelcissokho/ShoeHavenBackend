@@ -19,7 +19,7 @@ router.post("/payment",isLoggedIn, (req, res) => {
   );
 });
 
-router.post("/refund", isLoggedIn, async (req,res) => {
+router.post("/refund", isLoggedIn, async (req,res, next) => {
   try {
     const refund = await stripe.refunds.create({
       charge: req.body.chargeId

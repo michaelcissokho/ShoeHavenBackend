@@ -36,7 +36,7 @@ router.post('/login', async function (req, res, next) {
         //check if password matches user
         const isvalid = await bcrypt.compare(password, user.password)
         if (isvalid) {
-            const loggedInToken = jwt.sign({ username: user.username, isAdmin: user.isAdmin }, SECRET_KEY)
+            const loggedInToken = jwt.sign({ username: user.username, isAdmin: user.isAdmin, id: user._id }, SECRET_KEY)
             return res.json({ username: user.username, isAdmin: user.isAdmin, id: user._id, token: loggedInToken })
         } else {
             throw new BadRequestError(`Invalid Password`)

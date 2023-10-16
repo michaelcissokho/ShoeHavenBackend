@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 
 const Success = ({ createCart }) => {
   const location = useLocation();
-  console.log(location)
   const data = location.state.stripeData;
   const cart = location.state.products;
   const [orderId, setOrderId] = useState(null);
@@ -36,7 +35,7 @@ const Success = ({ createCart }) => {
     data && createOrder();
   }, [cart, data]);
 
-  createCart()
+  createCart(localStorage.getItem('id'))
 
   return (
     <div

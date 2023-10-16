@@ -25,7 +25,7 @@ function isLoggedIn(req, res, next) {
 }
 
 function isAdminOrCorrectUser(req,res,next){
-    if(req.user.username === req.params.username || req.user.isAdmin){
+    if(req.user.id === req.params.id || req.user.id === req.body.id || req.user.isAdmin){
         return next()
     }else{
         return next(new BadRequestError('Unauthorized Access'))

@@ -40,24 +40,24 @@ const SummaryButton = styled.button`
     font-weight: 600;
 `;
 
-const Order = ({ orderId }) => {
-    const [order, setOrder] = useState({})
+const Order = ({ order }) => {
+    // const [order, setOrder] = useState({})
 
-    useEffect(() => {
-        async function getOrder() {
-            let res = await api.request(`orders/find/${orderId}`)
-            setOrder(res)
-        }
-        getOrder()
-    }, [orderId])
+    // useEffect(() => {
+    //     async function getOrder() {
+    //         let res = await api.request(`orders/find/${orderId}`)
+    //         setOrder(res)
+    //     }
+    //     getOrder()
+    // }, [orderId])
 
     async function returnOrder(){
         try {
             let refund = await api.request(`checkout/refund`,{chargeId:order.chargeId}, 'post')
-            let markReturned = await api.request(`orders/return/${order._id}`,{status:'returned'},'post')
-            // console.log('Refund', refund)
-            // console.log("Item Returned", markReturned)
+            let markReturned = await api.request(`orders/return/${order._id}`,{status:'returned', id: localStorage.getItem('id')},'post')
+            
             alert(`Order: ${markReturned._id} returned. You Have Been Refunded: $${refund.amount/100}`)
+            window.location.reload(true)
             return (refund,markReturned)
         } catch (err) {
             console.log(err)
