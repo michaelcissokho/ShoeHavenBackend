@@ -71,7 +71,7 @@ const Login = ({ login,createCart }) => {
                 history.push('/')
             } else {
                 history.push('/login')
-                alert('Invalid Username/Password')
+                // alert('Invalid Username/Password')
             }
         })
     }
