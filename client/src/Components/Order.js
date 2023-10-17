@@ -71,7 +71,7 @@ const Order = ({ order }) => {
 
     return (
         <Container>
-            {completedReturn ? <Summary>
+            {completedReturn ==false ? <Summary>
                 <SummaryTitle>ORDER SUMMARY</SummaryTitle>
                 {order.products?.map(product => 
                 <OrderProduct 
@@ -91,8 +91,7 @@ const Order = ({ order }) => {
                 : <SummaryButton onClick={() => returnOrder()}>RETURN ORDER</SummaryButton>
                 }            
             </Summary>
-             : <Redirect to={`/users/${localStorage.getItem('id')}`} />}
-            {/* <Redirect to="/"/>} */}
+            : <Redirect to="/"/>}
 
         </Container>
     )

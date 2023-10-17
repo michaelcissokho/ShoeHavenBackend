@@ -14,7 +14,7 @@ import Product from './Pages/Product';
 import Success from './Pages/Success';
 
 function App() {
-  window.scrollTo({top:0})
+  // window.scrollTo({top:0})
   const history = useHistory()
   const [user, setUser] = useState(localStorage.getItem('id'));
 
