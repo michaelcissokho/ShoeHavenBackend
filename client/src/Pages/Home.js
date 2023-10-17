@@ -6,6 +6,7 @@ import Footer from '../Components/Footer'
 import Feedback from '../Components/Feedback'
 
 const Home = ({submitFeedback}) => {
+    window.scrollTo({top:0})
     return (
         <div>
             <Slider/>

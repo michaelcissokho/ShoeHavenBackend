@@ -25,9 +25,9 @@ function isLoggedIn(req, res, next) {
 }
 
 function isAdminOrCorrectUser(req,res,next){
-    console.log(req.user)
-    console.log(req.params)
-    console.log(req.body)
+    // console.log(req.user)
+    // console.log(req.params)
+    // console.log(req.body)
     if(req.user.id === req.params.id || req.user.id === req.body.id || req.user.isAdmin){
         return next()
     }else{

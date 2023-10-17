@@ -4,6 +4,7 @@ import { mobile } from '../responsive'
 import { Api as api } from '../Api'
 import OrderProduct from './OrderProduct'
 import {v4 as uuid} from 'uuid'
+import { Redirect } from 'react-router-dom'
 
 const Container = styled.div``
 
@@ -41,6 +42,9 @@ const SummaryButton = styled.button`
 `;
 
 const Order = ({ order }) => {
+    // window.scrollTo({top:0})
+    // const history = useHistory()
+    const [completedReturn, setCompletedReturn] = useState(false)
     // const [order, setOrder] = useState({})
 
     // useEffect(() => {
@@ -56,8 +60,9 @@ const Order = ({ order }) => {
             let refund = await api.request(`checkout/refund`,{chargeId:order.chargeId}, 'post')
             let markReturned = await api.request(`orders/return/${order._id}`,{status:'returned', id: localStorage.getItem('id')},'post')      
             alert(`Order: ${markReturned._id} returned. You Have Been Refunded: $${refund.amount/100}`)
-            
-            window.location.reload(true)
+
+            // setCompletedReturn(true)
+            window.location.assign(window.location.href)
             return (refund,markReturned)
         } catch (err) {
             console.log(err)
@@ -86,6 +91,9 @@ const Order = ({ order }) => {
                 : <SummaryButton onClick={() => returnOrder()}>RETURN ORDER</SummaryButton>
                 }            
             </Summary>
+            {/* // : <Redirect to={`/users/${localStorage.getItem('id')}`} />}
+            // : <Redirect to="/"/>} */}
+
         </Container>
     )
 }
