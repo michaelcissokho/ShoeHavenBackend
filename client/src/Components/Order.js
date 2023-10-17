@@ -61,8 +61,8 @@ const Order = ({ order }) => {
             let markReturned = await api.request(`orders/return/${order._id}`,{status:'returned', id: localStorage.getItem('id')},'post')      
             alert(`Order: ${markReturned._id} returned. You Have Been Refunded: $${refund.amount/100}`)
 
-            // setCompletedReturn(true)
-            window.location.assign(window.location.href)
+            setCompletedReturn(true)
+            // window.location.assign(window.location.href)
             return (refund,markReturned)
         } catch (err) {
             console.log(err)
@@ -71,7 +71,7 @@ const Order = ({ order }) => {
 
     return (
         <Container>
-            <Summary>
+            {completedReturn ? <Summary>
                 <SummaryTitle>ORDER SUMMARY</SummaryTitle>
                 {order.products?.map(product => 
                 <OrderProduct 
@@ -91,8 +91,8 @@ const Order = ({ order }) => {
                 : <SummaryButton onClick={() => returnOrder()}>RETURN ORDER</SummaryButton>
                 }            
             </Summary>
-            {/* // : <Redirect to={`/users/${localStorage.getItem('id')}`} />}
-            // : <Redirect to="/"/>} */}
+             : <Redirect to={`/users/${localStorage.getItem('id')}`} />}
+            {/* <Redirect to="/"/>} */}
 
         </Container>
     )
