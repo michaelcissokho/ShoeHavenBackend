@@ -17,7 +17,7 @@ router.post('/register', async function (req, res, next) {
             password: await bcrypt.hash(password, BCRYPT_WORK_FACTOR)
         })
         const savedUser = await newUser.save()
-        const newUserToken = jwt.sign({ username: savedUser.username, isAdmin: savedUser.isAdmin }, SECRET_KEY)
+        const newUserToken = jwt.sign({ username: savedUser.username, isAdmin: savedUser.isAdmin, id: savedUser._id }, SECRET_KEY)
         return res.json({ username: savedUser.username, token: newUserToken, isAdmin: savedUser.isAdmin, id: savedUser._id })
     } catch (err) {
         return next(err)

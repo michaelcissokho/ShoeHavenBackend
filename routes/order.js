@@ -39,6 +39,7 @@ router.get('/users/:id', isAdminOrCorrectUser, async function (req, res, next) {
 
 //refund an order
 router.post('/return/:id', isAdminOrCorrectUser, async function (req, res, next) {
+    console.log(req.body)
     try {
         const returned = await Order.findByIdAndUpdate(
             req.params.id,
