@@ -40,13 +40,13 @@ router.put('/:username/update', isAdminOrCorrectUser, async function (req, res, 
         }
 
         const newUser = await User.findByIdAndUpdate(
-            req.params.id,
+            req.body.id,
             {
                 $set: req.body
             },
             { new: true }
         )
-
+        console.log('NEW USER:', newUser)
         return res.json(newUser)
     } catch (err) {
         return next(err)

@@ -82,12 +82,12 @@ const Footer = () => {
                     A site for all shoes for sale by Michael Cissokho the site's creator. Hopefully you will find your perfect fit!
                 </Desc>
                 <SocialContainer>
-                    <SocialIcon color="3B5999">
+                    {/* <SocialIcon color="3B5999">
                         <Facebook />
                     </SocialIcon>
                     <SocialIcon color="55ACEE">
                         <Twitter />
-                    </SocialIcon>
+                    </SocialIcon> */}
                     <SocialIcon color="3B5999">
                         <a href={"https://www.linkedin.com/in/michaelcissokho/"}>
                             <LinkedIn style={{textDecoration:'none', color:'white'}}/> 

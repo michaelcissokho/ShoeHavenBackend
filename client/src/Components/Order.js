@@ -59,7 +59,7 @@ const Order = ({ order }) => {
         try {
             let refund = await api.request(`checkout/refund`,{chargeId:order.chargeId}, 'post')
             let markReturned = await api.request(`orders/return/${order._id}`,{status:'returned', id: localStorage.getItem('id')},'post')      
-            alert(`Order: ${markReturned._id} returned. You Have Been Refunded: $${refund.amount/100}`)
+            alert(`Order: ${markReturned._id} has been returned.\n You Have Been Refunded: $${refund.amount/100}`)
 
             setCompletedReturn(true)
             // window.location.assign(window.location.href)

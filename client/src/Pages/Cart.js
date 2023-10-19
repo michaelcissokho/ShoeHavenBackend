@@ -132,7 +132,7 @@ const Cart = () => {
     }
 
     function displayCheckoutAlert(){
-        alert('Enter card number 4242 4242 4242 4242 and any future expiration date to complete checkout')
+        alert(`Enter card number 4242 4242 4242 4242\nand any future expiration date to complete checkout`)
     }
 
     return (
@@ -179,7 +179,6 @@ const Cart = () => {
                             billingAddress
                             shippingAddress
                             description={`Your total is $${cartTotal}`}
-                            custom_text
                             amount={cartTotal * 100}
                             token={onToken}
                             stripeKey={KEY}
